@@ -1,5 +1,5 @@
 Package: mlr3learners.nnet
-Title: nnet Learner for mlr3
+Title: nnet and multinom Learner for mlr3
 Version: 0.1.0.9000
 Authors@R:
     person(given = "Henri",
