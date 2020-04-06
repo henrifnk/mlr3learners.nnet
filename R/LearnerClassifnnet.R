@@ -1,29 +1,26 @@
-#' @title Classification JRip Learner
+#' @title Classification nnet Learner
 #'
-#' @name mlr_learners_classif.JRip
+#' @name mlr_learners_classif.nnet
 #'
 #' @description
-#' A [mlr3::LearnerClassif] implementing classification JRip from package \CRANpkg{RWeka}.
-#' Calls [RWeka::JRip()].
+#' A [mlr3::LearnerClassif] implementing classification JRip from package \CRANpkg{nnet}.
+#' Calls [nnet::nnet()].
 #'
-#' This learner contains changed ids of the following control agruments
-#' since their ids contain irregular pattern:
-#' * mlr3learner: output_debug_info RWeka: output-debug-info
-#' * mlr3learner: do_not_check_capabilities RWeka: do-not-check-capabilities
-#' * mlr3learner: num_decimal_places RWeka: num-decimal-places
-#' * mlr3learner: batch_size RWeka: batch-size
+#' @section Custom mlr3 defaults:
+#' - `size`:
+#'   - Actual default: numeric(0L)
+#'   - Adjusted default: 3L
+#'   - Reason for change: seems to have no default in nnet().
 #'
-#' @templateVar id classif.Jrip
+#' @templateVar id classif.nnet
 #' @template section_dictionary_learner
 #'
 #' @references
-#' Cohen W (1995).
-#' Fast effective rule induction
-#' In: Proceedings of the 12th International Conference on Machine Learning, pages 115–123.
-#' \url{http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.50.8204}
+#' Ripley, B (1996).
+#' Pattern Recognition and Neural Networks. Cambridge.
 #'
 #' @export
-LearnerClassifJRip = R6Class("LearnerClassifJRip",
+LearnerClassifnnet = R6Class("LearnerClassifnnet",
   inherit = LearnerClassif,
   public = list(
     #' @description
@@ -31,49 +28,60 @@ LearnerClassifJRip = R6Class("LearnerClassifJRip",
     initialize = function() {
       ps = ParamSet$new(
         params = list(
-          ParamUty$new(id = "subset", tags = c("train", "pars")),
-          ParamUty$new(id = "na.action", tags = c("train", "pars")),
-          ParamInt$new(id = "F", default = 3L, lower = 2L, tags = c("train", "control")),
-          ParamDbl$new(id = "N", default = 2, lower = 0, tags = c("train", "control")),
-          ParamInt$new(id = "O", default = 2L, lower = 1L, tags = c("train", "control")),
-          ParamLgl$new(id = "D", default = FALSE, tags = c("train", "control")),
-          ParamInt$new(id = "S", default = 1L, lower = 1L, tags = c("train", "control")),
-          ParamLgl$new(id = "E", default = FALSE, tags = c("train", "control")),
-          ParamLgl$new(id = "P", default = FALSE, tags = c("train", "control")),
-          ParamLgl$new(id = "output_debug_info", default = FALSE, tags = c("train", "control")),
-          ParamLgl$new(id = "do_not_check_capabilities", default = FALSE,
-            tags = c("train", "control")),
-          ParamInt$new(id = "num_decimal_places", default = 2L, lower = 1L,
-            tags = c("train", "control")),
-          ParamInt$new(id = "batch_size", default = 100L, lower = 1L, tags = c("train", "control")),
-          ParamUty$new(id = "options", default = NULL, tags = c("train", "pars"))
+
+          ParamInt$new(id = "size", default = 3L, lower = 0L, tags = "train"),
+          ParamUty$new(id = "Wts", tags = "train"),
+          ParamUty$new(id = "mask", tags = "train"),
+          ParamLgl$new(id = "linout", default = FALSE, tags = "train"),
+          ParamLgl$new(id = "entropy", default = FALSE, tags = "train"),
+          ParamLgl$new(id = "softmax", default = FALSE, tags = "train"),
+          ParamLgl$new(id = "censored", default = FALSE, tags = "train"),
+          ParamLgl$new(id = "skip", default = FALSE, tags = "train"),
+          ParamDbl$new(id = "rang", default = 0.7, tags = "train"),
+          ParamDbl$new(id = "decay", default = 0, tags = "train"),
+          ParamInt$new(id = "maxit", default = 100L, lower = 1L, tags = "train"),
+          ParamLgl$new(id = "Hess", default = FALSE, tags = "train"),
+          ParamLgl$new(id = "trace", default = TRUE, tags = "train"),
+          ParamInt$new(id = "MaxNWts", default = 1000L, lower = 1L, tags = "train"),
+          ParamDbl$new(id = "abstol", default = 1.0e-4, tags = "train"),
+          ParamDbl$new(id = "reltol", default = 1.0e-8, tags = "train")
         )
       )
+      ps$values = list(size = 3L)
+      ps$add_dep("linout", "entropy", CondEqual$new(FALSE))
+      ps$add_dep("linout", "softmax", CondEqual$new(FALSE))
+      ps$add_dep("linout", "censored", CondEqual$new(FALSE))
+      ps$add_dep("entropy", "linout", CondEqual$new(FALSE))
+      ps$add_dep("entropy", "softmax", CondEqual$new(FALSE))
+      ps$add_dep("entropy", "censored", CondEqual$new(FALSE))
+      ps$add_dep("softmax", "linout", CondEqual$new(FALSE))
+      ps$add_dep("softmax", "entropy", CondEqual$new(FALSE))
+      ps$add_dep("softmax", "censored", CondEqual$new(FALSE))
+      ps$add_dep("censored", "linout", CondEqual$new(FALSE))
+      ps$add_dep("censored", "entropy", CondEqual$new(FALSE))
+      ps$add_dep("censored", "softmax", CondEqual$new(FALSE))
 
       super$initialize(
-        id = "classif.JRip",
-        packages = "RWeka",
+        id = "classif.nnet",
+        packages = "nnet",
         feature_types = c("numeric", "factor", "ordered"),
-        predict_types = c("response", "prob"),
+        predict_types = c("prob", "response"),
         param_set = ps,
-        properties = c("twoclass", "multiclass"),
-        man = "mlr3learners.rweka::mlr_learners_classif.JRip"
+        properties = c("twoclass", "multiclass", "weights"),
+        man = "mlr3learners.nnet::mlr_learners_classif.nnet"
       )
     }
   ),
 
   private = list(
     .train = function(task) {
-      ctrl = self$param_set$get_values(tags = "control")
-      if (length(ctrl) > 0L) {
-        names(ctrl) = gsub("_", replacement = "-", x = names(ctrl))
-        ctrl = mlr3misc::invoke(RWeka::Weka_control, ctrl)
+      pars = self$param_set$get_values(tags = "train")
+      if ("weights" %in% task$properties) {
+        pars = insert_named(pars, list(weights = task$weights$weight))
       }
-
-      pars = self$param_set$get_values(tags = "pars")
       f = task$formula()
       data = task$data()
-      mlr3misc::invoke(RWeka::JRip, formula = f, data = data, control = ctrl, .args = pars)
+      mlr3misc::invoke(nnet::nnet.formula, formula = f, data = data, .args = pars)
     },
 
     .predict = function(task) {
@@ -84,7 +92,11 @@ LearnerClassifJRip = R6Class("LearnerClassifJRip",
       if (self$predict_type == "response") {
         response = mlr3misc::invoke(predict, self$model, newdata = newdata, type = "class")
       } else {
-        prob = mlr3misc::invoke(predict, self$model, newdata = newdata, type = "prob")
+        prob = mlr3misc::invoke(predict, self$model, newdata = newdata, type = "raw")
+        if (task$properties == "twoclass") {
+          prob = cbind(1 - prob, prob)
+          colnames(prob) = self$model$lev
+        }
       }
       PredictionClassif$new(task = task, response = response, prob = prob)
     }

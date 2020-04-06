@@ -1,12 +1,12 @@
-library(mlr3learners.rweka)
+library(mlr3learners.nnet)
 
-test_that("classif.JRip", {
-  learner = lrn("classif.JRip")
-  fun = RWeka::JRip
+test_that("classif.nnet", {
+  learner = lrn("classif.nnet")
+  fun = nnet::nnet
     exclude = c(
       "formula", # handled via mlr3
       "data", # handled via mlr3
-      "control" # handled to RWeka::Weka_Control
+      "weights" # handled via mlr3
     )
     ParamTest = run_paramtest(learner, fun, exclude)
     expect_true(ParamTest, info = paste0(
@@ -14,21 +14,5 @@ test_that("classif.JRip", {
 Missing parameters:
 ",
       paste0("- '", ParamTest$missing, "'", collapse = "
-")))
-})
-
-test_that("Weka_control JRip", {
-  learner = lrn("classif.JRip")
-  fun = RWeka::Weka_control
-  exclude = c(
-    character(0L)
-  )
-  
-  ParamTest = run_paramtest(learner, fun, exclude)
-  expect_true(ParamTest, info = paste0(
-    "
-Missing parameters:
-",
-    paste0("- '", ParamTest$missing, "'", collapse = "
 ")))
 })
