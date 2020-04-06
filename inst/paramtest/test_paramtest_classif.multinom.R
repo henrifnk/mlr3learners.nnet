@@ -2,7 +2,7 @@ library(mlr3learners.nnet)
 
 test_that("classif.nnet", {
   learner = lrn("classif.nnet")
-  fun = nnet::nnet.formula
+  fun = nnet::multinom
   exclude = c(
     "formula", # handled via mlr3
     "data", # handled via mlr3
@@ -16,3 +16,5 @@ Missing parameters:
     paste0("- '", ParamTest$missing, "'", collapse = "
 ")))
 })
+
+

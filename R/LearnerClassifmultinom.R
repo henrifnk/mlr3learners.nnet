@@ -1,10 +1,10 @@
-#' @title Classification nnet Learner
+#' @title Classification multinom Learner
 #'
-#' @name mlr_learners_classif.nnet
+#' @name mlr_learners_classif.multinom
 #'
 #' @description
 #' A [mlr3::LearnerClassif] implementing classification JRip from package \CRANpkg{nnet}.
-#' Calls [nnet::nnet()].
+#' Calls [nnet::multinom()].
 #'
 #' @section Custom mlr3 defaults:
 #' - `size`:
@@ -16,11 +16,11 @@
 #' @template section_dictionary_learner
 #'
 #' @references
-#' Ripley, B (1996).
-#' Pattern Recognition and Neural Networks. Cambridge.
+#' Venables, W (2002).
+#' Modern Applied Statistics with S. Fourth Edition.
 #'
 #' @export
-LearnerClassifnnet = R6Class("LearnerClassifnnet",
+LearnerClassifmultinom = R6Class("LearnerClassifmultinom",
   inherit = LearnerClassif,
   public = list(
     #' @description
@@ -28,7 +28,6 @@ LearnerClassifnnet = R6Class("LearnerClassifnnet",
     initialize = function() {
       ps = ParamSet$new(
         params = list(
-          ParamInt$new(id = "size", default = 3L, lower = 0L, tags = "train"),
           ParamUty$new(id = "subset", tags = "train"),
           ParamUty$new(id = "na.action", tags = "train"),
           ParamUty$new(id = "contrasts", default = NULL, tags = "train"),
@@ -47,6 +46,9 @@ LearnerClassifnnet = R6Class("LearnerClassifnnet",
           ParamInt$new(id = "MaxNWts", default = 1000L, lower = 1L, tags = "train"),
           ParamDbl$new(id = "abstol", default = 1.0e-4, tags = "train"),
           ParamDbl$new(id = "reltol", default = 1.0e-8, tags = "train"),
+          ParamInt$new(id = "summ", default = 0L, lower = 0L, upper = 3L, tags = "train"),
+          ParamLgl$new(id = "censored", default = FALSE, tags = "train"),
+          ParamLgl$new(id = "model", default = FALSE, tags = "train")
         )
       )
       ps$values = list(size = 3L)
@@ -64,7 +66,7 @@ LearnerClassifnnet = R6Class("LearnerClassifnnet",
       ps$add_dep("censored", "softmax", CondEqual$new(FALSE))
 
       super$initialize(
-        id = "classif.nnet",
+        id = "classif.multinom",
         packages = "nnet",
         feature_types = c("numeric", "factor", "ordered"),
         predict_types = c("prob", "response"),
@@ -83,7 +85,7 @@ LearnerClassifnnet = R6Class("LearnerClassifnnet",
       }
       f = task$formula()
       data = task$data()
-      mlr3misc::invoke(nnet::nnet.formula, formula = f, data = data, .args = pars)
+      mlr3misc::invoke(nnet::multinom, formula = f, data = data, .args = pars)
     },
 
     .predict = function(task) {
