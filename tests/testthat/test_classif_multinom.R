@@ -1,7 +1,7 @@
 context("classif.nnet")
 
 # unit tests fail on maOS devel
-skip_on_os("macOS")
+skip_on_os("mac")
 
 test_that("autotest", {
   learner = LearnerClassifmultinom$new()
