@@ -26,6 +26,7 @@ LearnerClassifnnet = R6Class("LearnerClassifnnet",
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
     initialize = function() {
+
       ps = ParamSet$new(
         params = list(
           ParamInt$new(id = "size", default = 3L, lower = 0L, tags = "train"),

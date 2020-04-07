@@ -18,9 +18,9 @@ Imports:
     R6
 Suggests:
     checkmate,
+    nnet,
     rmarkdown,
-    testthat,
-    nnet
+    testthat
 Encoding: UTF-8
 NeedsCompilation: no
 Roxygen: list(markdown = TRUE)

@@ -35,7 +35,7 @@ jobs:
       CCACHE_NOHASHDIR: true
       CCACHE_SLOPPINESS: include_file_ctime
       # make sure to follow instructions at https://github.com/mlr3learners/mlr3learners.drat
-      id_rsa: ${{ secrets.id_rsa }}
+      TIC_DEPLOY_KEY: ${{ secrets.TIC_DEPLOY_KEY }}
       # prevent rgl issues because no X11 display is available
       RGL_USE_NULL: true
 

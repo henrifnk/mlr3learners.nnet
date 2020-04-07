@@ -21,42 +21,18 @@ LearnerClassifmultinom = R6Class("LearnerClassifmultinom",
     #' @description
     #' Creates a new instance of this [R6][R6::R6Class] class.
     initialize = function() {
+
       ps = ParamSet$new(
         params = list(
           ParamUty$new(id = "subset", tags = "train"),
           ParamUty$new(id = "na.action", tags = "train"),
           ParamUty$new(id = "contrasts", default = NULL, tags = "train"),
-          ParamUty$new(id = "Wts", tags = "train"),
-          ParamUty$new(id = "mask", tags = "train"),
-          ParamLgl$new(id = "linout", default = FALSE, tags = "train"),
-          ParamLgl$new(id = "entropy", default = FALSE, tags = "train"),
-          ParamLgl$new(id = "softmax", default = FALSE, tags = "train"),
-          ParamLgl$new(id = "censored", default = FALSE, tags = "train"),
-          ParamLgl$new(id = "skip", default = FALSE, tags = "train"),
-          ParamDbl$new(id = "rang", default = 0.7, tags = "train"),
-          ParamDbl$new(id = "decay", default = 0, tags = "train"),
-          ParamInt$new(id = "maxit", default = 100L, lower = 1L, tags = "train"),
           ParamLgl$new(id = "Hess", default = FALSE, tags = "train"),
-          ParamLgl$new(id = "trace", default = TRUE, tags = "train"),
-          ParamInt$new(id = "MaxNWts", default = 1000L, lower = 1L, tags = "train"),
-          ParamDbl$new(id = "abstol", default = 1.0e-4, tags = "train"),
-          ParamDbl$new(id = "reltol", default = 1.0e-8, tags = "train"),
           ParamInt$new(id = "summ", default = 0L, lower = 0L, upper = 3L, tags = "train"),
+          ParamLgl$new(id = "censored", default = FALSE, tags = "train"),
           ParamLgl$new(id = "model", default = FALSE, tags = "train")
         )
       )
-      ps$add_dep("linout", "entropy", CondEqual$new(FALSE))
-      ps$add_dep("linout", "softmax", CondEqual$new(FALSE))
-      ps$add_dep("linout", "censored", CondEqual$new(FALSE))
-      ps$add_dep("entropy", "linout", CondEqual$new(FALSE))
-      ps$add_dep("entropy", "softmax", CondEqual$new(FALSE))
-      ps$add_dep("entropy", "censored", CondEqual$new(FALSE))
-      ps$add_dep("softmax", "linout", CondEqual$new(FALSE))
-      ps$add_dep("softmax", "entropy", CondEqual$new(FALSE))
-      ps$add_dep("softmax", "censored", CondEqual$new(FALSE))
-      ps$add_dep("censored", "linout", CondEqual$new(FALSE))
-      ps$add_dep("censored", "entropy", CondEqual$new(FALSE))
-      ps$add_dep("censored", "softmax", CondEqual$new(FALSE))
 
       super$initialize(
         id = "classif.multinom",
