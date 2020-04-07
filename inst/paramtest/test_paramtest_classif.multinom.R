@@ -1,7 +1,7 @@
 library(mlr3learners.nnet)
 
 test_that("classif.nnet", {
-  learner = lrn("classif.nnet")
+  learner = lrn("classif.multinom")
   fun = nnet::multinom
   exclude = c(
     "formula", # handled via mlr3
