@@ -46,7 +46,7 @@ LearnerClassifnnet = R6Class("LearnerClassifnnet",
           ParamLgl$new(id = "trace", default = TRUE, tags = "train"),
           ParamInt$new(id = "MaxNWts", default = 1000L, lower = 1L, tags = "train"),
           ParamDbl$new(id = "abstol", default = 1.0e-4, tags = "train"),
-          ParamDbl$new(id = "reltol", default = 1.0e-8, tags = "train"),
+          ParamDbl$new(id = "reltol", default = 1.0e-8, tags = "train")
         )
       )
       ps$values = list(size = 3L)

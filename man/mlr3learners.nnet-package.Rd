@@ -4,7 +4,7 @@
 \name{mlr3learners.nnet-package}
 \alias{mlr3learners.nnet}
 \alias{mlr3learners.nnet-package}
-\title{mlr3learners.nnet: nnet Learner for mlr3}
+\title{mlr3learners.nnet: nnet and multinom Learner for mlr3}
 \description{
 nnet Learner for mlr3.
 }

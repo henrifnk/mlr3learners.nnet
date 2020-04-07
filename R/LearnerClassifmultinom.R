@@ -6,13 +6,8 @@
 #' A [mlr3::LearnerClassif] implementing classification JRip from package \CRANpkg{nnet}.
 #' Calls [nnet::multinom()].
 #'
-#' @section Custom mlr3 defaults:
-#' - `size`:
-#'   - Actual default: numeric(0L)
-#'   - Adjusted default: 3L
-#'   - Reason for change: seems to have no default in nnet().
 #'
-#' @templateVar id classif.nnet
+#' @templateVar id classif.multinom
 #' @template section_dictionary_learner
 #'
 #' @references
@@ -47,11 +42,9 @@ LearnerClassifmultinom = R6Class("LearnerClassifmultinom",
           ParamDbl$new(id = "abstol", default = 1.0e-4, tags = "train"),
           ParamDbl$new(id = "reltol", default = 1.0e-8, tags = "train"),
           ParamInt$new(id = "summ", default = 0L, lower = 0L, upper = 3L, tags = "train"),
-          ParamLgl$new(id = "censored", default = FALSE, tags = "train"),
           ParamLgl$new(id = "model", default = FALSE, tags = "train")
         )
       )
-      ps$values = list(size = 3L)
       ps$add_dep("linout", "entropy", CondEqual$new(FALSE))
       ps$add_dep("linout", "softmax", CondEqual$new(FALSE))
       ps$add_dep("linout", "censored", CondEqual$new(FALSE))
@@ -72,7 +65,7 @@ LearnerClassifmultinom = R6Class("LearnerClassifmultinom",
         predict_types = c("prob", "response"),
         param_set = ps,
         properties = c("twoclass", "multiclass", "weights"),
-        man = "mlr3learners.nnet::mlr_learners_classif.nnet"
+        man = "mlr3learners.nnet::mlr_learners_classif.multinom"
       )
     }
   ),
@@ -96,7 +89,7 @@ LearnerClassifmultinom = R6Class("LearnerClassifmultinom",
       if (self$predict_type == "response") {
         response = mlr3misc::invoke(predict, self$model, newdata = newdata, type = "class")
       } else {
-        prob = mlr3misc::invoke(predict, self$model, newdata = newdata, type = "raw")
+        prob = mlr3misc::invoke(predict, self$model, newdata = newdata, type = "probs")
         if (task$properties == "twoclass") {
           prob = cbind(1 - prob, prob)
           colnames(prob) = self$model$lev
