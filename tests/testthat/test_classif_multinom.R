@@ -1,5 +1,7 @@
 context("classif.nnet")
 
+skip_on_os("mac")
+
 test_that("autotest", {
   learner = LearnerClassifmultinom$new()
   expect_learner(learner)
