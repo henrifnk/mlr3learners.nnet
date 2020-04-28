@@ -13,9 +13,8 @@ Calls \code{\link[nnet:nnet]{nnet::nnet()}}.
 \itemize{
 \item \code{size}:
 \itemize{
-\item Actual default: numeric(0L)
 \item Adjusted default: 3L
-\item Reason for change: seems to have no default in nnet().
+\item Reason for change: has no default in nnet().
 }
 }
 }

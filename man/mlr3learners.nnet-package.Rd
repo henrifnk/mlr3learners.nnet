@@ -4,9 +4,9 @@
 \name{mlr3learners.nnet-package}
 \alias{mlr3learners.nnet}
 \alias{mlr3learners.nnet-package}
-\title{mlr3learners.nnet: nnet and multinom Learner for mlr3}
+\title{mlr3learners.nnet: Learner from {nnet} package for mlr3}
 \description{
-nnet Learner for mlr3.
+{nnet} Learner from {nnet} package for mlr3.
 }
 \author{
 \strong{Maintainer}: Henri Funk \email{henrifnk@gmail.com}
