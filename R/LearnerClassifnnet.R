@@ -8,9 +8,8 @@
 #'
 #' @section Custom mlr3 defaults:
 #' - `size`:
-#'   - Actual default: numeric(0L)
 #'   - Adjusted default: 3L
-#'   - Reason for change: seems to have no default in nnet().
+#'   - Reason for change: has no default in nnet().
 #'
 #' @templateVar id classif.nnet
 #' @template section_dictionary_learner

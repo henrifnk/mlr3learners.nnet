@@ -9,7 +9,7 @@
 
 <!-- badges: end -->
 
-Adds `nnet` and `multinom` from the {nnet} package to {mlr3}.
+Adds `nnet` from {nnet} package to {mlr3}.
 
 Install the latest release of the package via
 

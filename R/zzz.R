@@ -12,7 +12,6 @@ register_mlr3 = function(libname, pkgname) {
 
   # add the learner to the dictionary
   x$add("classif.nnet", LearnerClassifnnet)
-  x$add("classif.multinom", LearnerClassifmultinom)
 }
 
 .onLoad = function(libname, pkgname) {
