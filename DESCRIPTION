@@ -1,12 +1,12 @@
 Package: mlr3learners.nnet
-Title: Learner from {nnet} package for mlr3
+Title: Learner from nnet package for mlr3
 Version: 0.1.0.9000
 Authors@R:
     person(given = "Henri",
            family = "Funk",
            role = "cre",
            email = "henrifnk@gmail.com")
-Description: {nnet} Learner from {nnet} package for
+Description: nnet Learner from nnet package for
     mlr3.
 License: LGPL-3
 Depends:

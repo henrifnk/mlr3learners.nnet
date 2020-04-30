@@ -17,6 +17,7 @@
 #' @references
 #' Ripley, B (1996).
 #' Pattern Recognition and Neural Networks. Cambridge.
+#' \url{http://www.stats.ox.ac.uk/~ripley/PRbook/Compl.pdf}
 #'
 #' @export
 LearnerClassifnnet = R6Class("LearnerClassifnnet",
@@ -67,9 +68,9 @@ LearnerClassifnnet = R6Class("LearnerClassifnnet",
         id = "classif.nnet",
         packages = "nnet",
         feature_types = c("numeric", "factor", "ordered"),
-        predict_types = c("prob", "response"),
+        predict_types = c("prob", "response", "weights"),
         param_set = ps,
-        properties = c("twoclass", "multiclass", "weights"),
+        properties = c("twoclass", "multiclass"),
         man = "mlr3learners.nnet::mlr_learners_classif.nnet"
       )
     }
@@ -79,7 +80,7 @@ LearnerClassifnnet = R6Class("LearnerClassifnnet",
     .train = function(task) {
       pars = self$param_set$get_values(tags = "train")
       if ("weights" %in% task$properties) {
-        pars = insert_named(pars, list(weights = task$weights$weight))
+        pars = mlr3misc::insert_named(pars, list(weights = task$weights$weight))
       }
       f = task$formula()
       data = task$data()

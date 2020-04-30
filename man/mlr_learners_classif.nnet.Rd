@@ -30,6 +30,7 @@ lrn("classif.nnet")
 \references{
 Ripley, B (1996).
 Pattern Recognition and Neural Networks. Cambridge.
+\url{http://www.stats.ox.ac.uk/~ripley/PRbook/Compl.pdf}
 }
 \section{Super classes}{
 \code{\link[mlr3:Learner]{mlr3::Learner}} -> \code{\link[mlr3:LearnerClassif]{mlr3::LearnerClassif}} -> \code{LearnerClassifnnet}
