@@ -96,7 +96,7 @@ LearnerClassifnnet = R6Class("LearnerClassifnnet",
         response = mlr3misc::invoke(predict, self$model, newdata = newdata, type = "class")
       } else {
         prob = mlr3misc::invoke(predict, self$model, newdata = newdata, type = "raw")
-        if (task$properties == "twoclass") {
+        if (length(self$model$lev) == 2L) {
           prob = cbind(1 - prob, prob)
           colnames(prob) = self$model$lev
         }
