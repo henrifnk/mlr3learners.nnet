@@ -15,7 +15,6 @@ test_that("classif.nnet", {
                                        paste0("- '", ParamTest$missing, "'", collapse = "\n")))
 })
 
-
 test_that("predict classif.nnet", {
   learner = lrn("classif.nnet")
   fun = nnet:::predict.nnet
