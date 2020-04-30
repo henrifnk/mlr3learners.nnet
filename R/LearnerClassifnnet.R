@@ -68,9 +68,9 @@ LearnerClassifnnet = R6Class("LearnerClassifnnet",
         id = "classif.nnet",
         packages = "nnet",
         feature_types = c("numeric", "factor", "ordered"),
-        predict_types = c("prob", "response", "weights"),
+        predict_types = c("prob", "response"),
         param_set = ps,
-        properties = c("twoclass", "multiclass"),
+        properties = c("twoclass", "multiclass", "weights"),
         man = "mlr3learners.nnet::mlr_learners_classif.nnet"
       )
     }
