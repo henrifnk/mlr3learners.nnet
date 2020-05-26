@@ -3,7 +3,7 @@
 #' @name mlr_learners_classif.nnet
 #'
 #' @description
-#' A [mlr3::LearnerClassif] implementing classification JRip from package \CRANpkg{nnet}.
+#' A [mlr3::LearnerClassif] implementing classification nnet from package \CRANpkg{nnet}.
 #' Calls [nnet::nnet()].
 #'
 #' @section Custom mlr3 defaults:
@@ -20,7 +20,7 @@
 #' \url{http://www.stats.ox.ac.uk/~ripley/PRbook/Compl.pdf}
 #'
 #' @export
-LearnerClassifnnet = R6Class("LearnerClassifnnet",
+LearnerClassifNnet = R6Class("LearnerClassifNnet",
   inherit = LearnerClassif,
   public = list(
     #' @description
