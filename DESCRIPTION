@@ -1,6 +1,6 @@
 Package: mlr3learners.nnet
 Title: Learner from nnet package for mlr3
-Version: 0.1.0
+Version: 0.1.1.9000
 Authors@R:
     person(given = "Henri",
            family = "Funk",
