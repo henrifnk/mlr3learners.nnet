@@ -6,8 +6,7 @@ Authors@R:
            family = "Funk",
            role = "cre",
            email = "henrifnk@gmail.com")
-Description: nnet Learner from nnet package for
-    mlr3.
+Description: nnet Learner from nnet package for mlr3.
 License: LGPL-3
 Depends:
     R (>= 3.1.0)

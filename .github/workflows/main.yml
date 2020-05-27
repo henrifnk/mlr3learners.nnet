@@ -35,7 +35,7 @@ jobs:
       CCACHE_NOHASHDIR: true
       CCACHE_SLOPPINESS: include_file_ctime
       # make sure to follow instructions at https://github.com/mlr3learners/mlr3learners.drat
-      TIC_DEPLOY_KEY: ${{ secrets.TIC_DEPLOY_KEY }}
+      id_rsa: ${{ secrets.id_rsa }}
       # prevent rgl issues because no X11 display is available
       RGL_USE_NULL: true
       # macOS >= 10.15.4 linking
@@ -94,7 +94,6 @@ jobs:
         run: |
           sudo apt install ccache libcurl4-openssl-dev
           mkdir -p ~/.R && echo -e 'CXX_STD = CXX14\n\nCC=ccache gcc -std=gnu99\nCXX=ccache g++\nCXX11=ccache g++ -std=gnu99\nCXX14=ccache g++ -std=gnu99\nC11=ccache g++\nC14=ccache g++\nFC=ccache gfortran\nF77=ccache gfortran' > $HOME/.R/Makevars
-
       # install ccache and write config file
       # mirror the setup described in https://github.com/rmacoslib/r-macos-rtools
       - name: "[macOS] ccache"
@@ -104,8 +103,7 @@ jobs:
           wget https://cran.r-project.org/bin/macosx/tools/clang-7.0.0.pkg
           sudo installer -package clang-7.0.0.pkg -target /
           mkdir -p ~/.R && echo -e 'CC=ccache /usr/local/clang7/bin/clang\nCXX=ccache /usr/local/clang7/bin/clang++\nF77=ccache gfortran/nCFLAGS=-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk\nCXXFLAGS=-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk\nCCFLAGS=-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk\nCPPFLAGS=-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk' > $HOME/.R/Makevars
-
-      # install ccache and write config file
+     # install ccache and write config file
       # mirror the setup described in https://github.com/rmacoslib/r-macos-rtools
       - name: "[macOS-devel] ccache"
         if: runner.os == 'macOS' && matrix.config.r == 'devel'
@@ -124,13 +122,11 @@ jobs:
           rm gfortran-8*
           # set compiler flags
           mkdir -p ~/.R && echo -e 'CC=ccache clang\nCPP=ccache clang\nCXX=ccache clang++\nCFLAGS=-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.13.sdk\nCCFLAGS=-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.13.sdk\nCXXFLAGS=-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.13.sdk\nCPPFLAGS=-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.13.sdk\nF77=ccache /usr/local/gfortran/bin/gfortran\nFC=ccache /usr/local/gfortran/bin/gfortran' > $HOME/.R/Makevars
-
       # for some strange Windows reason this step and the next one need to be decoupled
       - name: "[Stage] Prepare"
         run: |
           Rscript -e "if (!requireNamespace('remotes')) install.packages('remotes', type = 'source')"
           Rscript -e "if (getRversion() < '3.2' && !requireNamespace('curl')) install.packages('curl', type = 'source')"
-
       - name: "[Stage] Install"
         if: matrix.config.os != 'macOS-latest' || matrix.config.r != 'devel'
         run: Rscript -e "remotes::install_github('ropensci/tic')" -e "print(tic::dsl_load())" -e "tic::prepare_all_stages()" -e "tic::before_install()" -e "tic::install()"
@@ -141,7 +137,6 @@ jobs:
         run: |
           echo -e 'options(pkgType = "source", repos = structure(c(CRAN = "https://cloud.r-project.org/")))' > $HOME/.Rprofile
           Rscript -e "remotes::install_github('ropensci/tic')" -e "print(tic::dsl_load())" -e "tic::prepare_all_stages()" -e "tic::before_install()" -e "tic::install()"
-
       - name: "[Stage] Script"
         run: Rscript -e 'tic::script()'
 
@@ -160,7 +155,6 @@ jobs:
         if: matrix.config.r != 'devel'
         run: |
           Rscript -e "tic::before_deploy()"
-
       - name: "[Stage] Deploy"
         if: matrix.config.r != 'devel'
         run: Rscript -e "tic::deploy()"
